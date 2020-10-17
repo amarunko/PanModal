@@ -152,6 +152,12 @@ public protocol PanModalPresentable: AnyObject {
     var isUserInteractionEnabled: Bool { get }
 
     /**
+     Describes what happens when the user interacts the background view.
+     
+     Default value is .dismiss.
+     */
+    var backgroundInteraction: PanModalBackgroundInteraction { get }
+    /**
      A flag to determine if haptic feedback should be enabled during presentation.
 
      Default value is true.

@@ -42,9 +42,22 @@ public class DimmedView: UIView {
     }
 
     /**
+     The closure to be executed on hitTest
+     */
+    var hitTestHandler: ((_ point: CGPoint, _ event: UIEvent?) -> UIView?)?
+
+    /**
      The closure to be executed when a tap occurs
      */
-    var didTap: ((_ recognizer: UIGestureRecognizer) -> Void)?
+    var didTap: ((_ recognizer: UIGestureRecognizer) -> Void)? {
+        didSet {
+            if self.didTap != nil {
+                addGestureRecognizer(tapGesture)
+            } else {
+                removeGestureRecognizer(tapGesture)
+            }
+        }
+    }
 
     /**
      Tap gesture recognizer
@@ -64,6 +77,10 @@ public class DimmedView: UIView {
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        return self.hitTestHandler?(point, event) ?? super.hitTest(point, with: event)
     }
 
     // MARK: - Event Handlers
