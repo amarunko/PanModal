@@ -877,10 +877,24 @@ private extension PanModalPresentationController {
             drawAroundDragIndicator(currentPath: path, indicatorLeftEdgeXPos: indicatorLeftEdgeXPos)
         }
 
-        // Set path as a mask to display optional drag indicator view & rounded corners
-        let mask = CAShapeLayer()
-        mask.path = path.cgPath
-        view.layer.mask = mask
+        let layer = CAShapeLayer()
+
+        layer.fillColor = UIColor.white.cgColor
+        layer.masksToBounds = false
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowRadius = 4.0
+        layer.shadowOpacity = 1.0
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.path = UIBezierPath(roundedRect: view.bounds,
+                                             byRoundingCorners: [.topLeft, .topRight],
+                                             cornerRadii: CGSize(width: radius, height: radius)).cgPath
+        layer.shadowPath = layer.path
+
+        view.layer.insertSublayer(layer, at: 0)
+        if #available(iOS 11.0, *) {
+            view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner]
+        }
+        view.layer.cornerRadius = radius
 
         // Improve performance by rasterizing the layer
         view.layer.shouldRasterize = true
